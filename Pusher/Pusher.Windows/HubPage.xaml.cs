@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Navigation;
 using Pusher.Data;
 using Pusher.Common;
 
-// Il modello di progetto applicazione hub universale è documentato all'indirizzo http://go.microsoft.com/fwlink/?LinkID=391955
-
 namespace Pusher
 {
     /// <summary>
