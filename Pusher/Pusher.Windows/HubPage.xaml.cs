@@ -27,6 +27,9 @@ namespace Pusher
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
+        private static readonly string CLIENT_ID = "IfgaX7cNfg0bdIcXgoLmROL6xFlT9dgq";
+        private static readonly string CLIENT_SECRET = "w6QmD8gtBtz9gcT6RcjJ9JtIwgP5KVRx";
+
         /// <summary>
         /// Ottiene l'elemento NavigationHelper utilizzato per favorire la navigazione e la gestione del ciclo di vita dei processi.
         /// </summary>
