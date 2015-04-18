@@ -21,7 +21,7 @@ using Windows.Security.Authentication.Web;
 
 namespace Pusher
 {
-    
+
     public sealed partial class HubPage : Page
     {
         private NavigationHelper navigationHelper;
@@ -43,14 +43,14 @@ namespace Pusher
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 
-            if (!PusherUtils.isUserLoggedIn())
+            if (!PusherUtils.IsUserLoggedIn())
             {
                 System.Diagnostics.Debug.WriteLine("Not logged in");
                 CreateLoginDialog();
             }
             else
             {
-                
+                System.Diagnostics.Debug.WriteLine("I'm in");
             }
         }
 
@@ -65,34 +65,31 @@ namespace Pusher
         {
             System.Diagnostics.Debug.WriteLine("Perform Login");
             try
-            { 
-            string PushbulletLoginURL = PusherUtils.getPushbulletLoginURL();
-            System.Uri StartUri = new Uri(PushbulletLoginURL);
-            System.Uri EndUri = new Uri(PusherUtils.REDIRECT_URI);
+            {
+                System.Uri StartUri = new Uri(PusherUtils.GetPushbulletLoginURL());
+                System.Uri EndUri = new Uri(PusherUtils.REDIRECT_URI);
 
-            WebAuthenticationResult WebAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
-                                                    WebAuthenticationOptions.None,
-                                                    StartUri,
-                                                    EndUri);
-            if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
-            {
-                System.Diagnostics.Debug.WriteLine(WebAuthenticationResult.ResponseData.ToString());
-            }
-            else if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
-            {
-                System.Diagnostics.Debug.WriteLine("HTTP Error returned by AuthenticateAsync() : " + WebAuthenticationResult.ResponseErrorDetail.ToString());
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Error returned by AuthenticateAsync() : " + WebAuthenticationResult.ResponseStatus.ToString());
-            }
+                WebAuthenticationResult WebAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
+                                                        WebAuthenticationOptions.None,
+                                                        StartUri,
+                                                        EndUri);
+                if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
+                {
+                    PusherUtils.StoreAccessToken(WebAuthenticationResult.ResponseData.ToString());
+                }
+                else if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
+                {
+                    System.Diagnostics.Debug.WriteLine("HTTP Error returned by AuthenticateAsync() : " + 
+                        WebAuthenticationResult.ResponseErrorDetail.ToString());
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Error returned by AuthenticateAsync() : " + 
+                        WebAuthenticationResult.ResponseStatus.ToString());
+                }
             }
             catch (Exception Error)
             {
-                //
-                // Bad Parameter, SSL/TLS Errors and Network Unavailable errors are to be handled here.
-                //
-
                 System.Diagnostics.Debug.WriteLine(Error.ToString());
             }
 
