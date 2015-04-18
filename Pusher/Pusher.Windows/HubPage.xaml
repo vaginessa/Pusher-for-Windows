@@ -28,19 +28,15 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-
-    <!--
-    Questa griglia funge da pannello radice per la pagina.
-  -->
+    
     <Grid Background="#9C27B0">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
-        </Grid.ChildrenTransitions>
+        </Grid.ChildrenTransitions>        
         <Hub SectionHeaderClick="Hub_SectionHeaderClick">
             <Hub.Header>
-                <!-- Pulsante Indietro e titolo della pagina -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
@@ -58,10 +54,7 @@
                 </Grid>
             </Hub.Header>
             <HubSection Width="380" Background="#7B1FA2" Padding="0">
-                <!--<HubSection.Background>
-                    <ImageBrush ImageSource="Assets/MediumGray.png" Stretch="UniformToFill" />
-                </HubSection.Background>-->
-
+                
                 <DataTemplate>
                     <StackPanel Width="380" Margin="0,40,0,0">
                         <Image Source="Assets/MediumGray.png" Margin="80, 0, 80, 0"/>
@@ -71,7 +64,6 @@
                         <Button HorizontalAlignment="Center" Margin="0,20,0,0" Width="280">Push Me</Button>
                     </StackPanel>
                 </DataTemplate>
-
 
             </HubSection>
             <HubSection Width="500" x:Uid="Section1Header" Header="Section 1">
