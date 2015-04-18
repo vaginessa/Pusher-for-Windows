@@ -52,16 +52,37 @@
                         VerticalAlignment="Top" IsHitTestVisible="false" TextWrapping="NoWrap" />
                 </Grid>
             </Hub.Header>
-            <HubSection Width="380" Background="#7B1FA2" Padding="0">
+            <HubSection Width="390" Background="#7B1FA2" Padding="0" VerticalContentAlignment="Stretch">
 
                 <DataTemplate>
-                    <StackPanel Width="380" Margin="0,40,0,0">
-                        <Image Source="Assets/MediumGray.png" Margin="80, 0, 80, 0"/>
-                        <Rectangle StrokeThickness="0.6" Height="1" Width="300" Stroke="Black" Margin="0, 20, 0, 0"/>
-                        <TextBlock FontSize="30" Margin="0, 20, 0, 0" HorizontalAlignment="Center" Text="Una bella Scritta"/>
-                        <TextBox Name="SimplePushTextBox"  HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="TextBox" Width="280"/>
-                        <Button Name="SendSimplePushButton" Click="SendSimplePushButton_Click" HorizontalAlignment="Center" Margin="0,20,0,0" Width="280">Push Me</Button>
-                    </StackPanel>
+                    <Grid Margin="0, 40, 0, 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="380" />
+                            <RowDefinition Height="Auto" MinHeight="56" />
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" MinHeight="58" />
+                        </Grid.RowDefinitions>
+
+                        <Image Source="Assets/MediumGray.png" Margin="80, 0, 80, 0" Grid.Row="0" VerticalAlignment="Top" Height="173"/>
+
+                        <TextBlock FontSize="25" Margin="0,20,0,0" HorizontalAlignment="Center" TextAlignment="Center" Text="Simple Note Push" Grid.Row="1"/>
+
+                        <TextBox 
+                            Grid.Row="2"
+                            Name="SimplePushTextBox"  
+                            Width="250"
+                            HorizontalAlignment="Center" 
+                            Margin="0,10,0,0" 
+                            TextWrapping="Wrap" />
+
+                        <Button 
+                            Grid.Row="3"
+                            Name="SendSimplePushButton" 
+                            Width="250"
+                            HorizontalAlignment="Center"
+                            Margin="0,20,0,40" 
+                            Click="SendSimplePushButton_Click">Send Note</Button>
+                    </Grid>
                 </DataTemplate>
 
             </HubSection>
