@@ -45,7 +45,6 @@ namespace Pusher
 
             if (!PusherUtils.IsUserLoggedIn())
             {
-                System.Diagnostics.Debug.WriteLine("Not logged in");
                 CreateLoginDialog();
             }
             else
@@ -98,13 +97,6 @@ namespace Pusher
         {
             var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-4");
             this.DefaultViewModel["Section3Items"] = sampleDataGroup;
-        }
-
-        void Hub_SectionHeaderClick(object sender, HubSectionHeaderClickEventArgs e)
-        {
-            HubSection section = e.Section;
-            var group = section.DataContext;
-            this.Frame.Navigate(typeof(SectionPage), ((SampleDataGroup)group).UniqueId);
         }
 
         void ItemView_ItemClick(object sender, ItemClickEventArgs e)
