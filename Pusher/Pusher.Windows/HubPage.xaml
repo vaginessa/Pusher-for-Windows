@@ -28,13 +28,13 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    
+
     <Grid Background="#9C27B0">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
-        </Grid.ChildrenTransitions>        
+        </Grid.ChildrenTransitions>
         <Hub SectionHeaderClick="Hub_SectionHeaderClick">
             <Hub.Header>
                 <Grid>
@@ -54,14 +54,14 @@
                 </Grid>
             </Hub.Header>
             <HubSection Width="380" Background="#7B1FA2" Padding="0">
-                
+
                 <DataTemplate>
                     <StackPanel Width="380" Margin="0,40,0,0">
                         <Image Source="Assets/MediumGray.png" Margin="80, 0, 80, 0"/>
                         <Rectangle StrokeThickness="0.6" Height="1" Width="300" Stroke="Black" Margin="0, 20, 0, 0"/>
                         <TextBlock FontSize="30" Margin="0, 20, 0, 0" HorizontalAlignment="Center" Text="Una bella Scritta"/>
-                        <TextBox HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="TextBox" Width="280"/>
-                        <Button HorizontalAlignment="Center" Margin="0,20,0,0" Width="280">Push Me</Button>
+                        <TextBox Name="SimplePushTextBox"  HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="TextBox" Width="280"/>
+                        <Button Name="SendSimplePushButton" Click="SendSimplePushButton_Click" HorizontalAlignment="Center" Margin="0,20,0,0" Width="280">Push Me</Button>
                     </StackPanel>
                 </DataTemplate>
 

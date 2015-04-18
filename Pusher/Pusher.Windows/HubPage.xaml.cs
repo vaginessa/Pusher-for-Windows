@@ -70,9 +70,7 @@ namespace Pusher
                 System.Uri EndUri = new Uri(PusherUtils.REDIRECT_URI);
 
                 WebAuthenticationResult WebAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
-                                                        WebAuthenticationOptions.None,
-                                                        StartUri,
-                                                        EndUri);
+                                                        WebAuthenticationOptions.None, StartUri, EndUri);
                 if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
                 {
                     PusherUtils.StoreAccessToken(WebAuthenticationResult.ResponseData.ToString());
@@ -128,5 +126,48 @@ namespace Pusher
         }
 
         #endregion
+
+        private async void SendSimplePushButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox simplePushTextBox = FindChildControl<TextBox>(this, "SimplePushTextBox") as TextBox;
+            string message = simplePushTextBox.Text;
+
+            if(message.Length > 0) 
+            {
+                PusherUtils.pushNote(message);
+            }
+            else
+            {
+                var messageDialog = new Windows.UI.Popups.MessageDialog("Hey, at least one character!");
+                messageDialog.DefaultCommandIndex = 1;
+                await messageDialog.ShowAsync();
+            }
+        }
+
+        private DependencyObject FindChildControl<T>(DependencyObject control, string ctrlName)
+        {
+            int childNumber = VisualTreeHelper.GetChildrenCount(control);
+            for (int i = 0; i < childNumber; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(control, i);
+                FrameworkElement fe = child as FrameworkElement;
+                // Not a framework element or is null
+                if (fe == null) return null;
+
+                if (child is T && fe.Name == ctrlName)
+                {
+                    // Found the control so return
+                    return child;
+                }
+                else
+                {
+                    // Not found it - search children
+                    DependencyObject nextLevel = FindChildControl<T>(child, ctrlName);
+                    if (nextLevel != null)
+                        return nextLevel;
+                }
+            }
+            return null;
+        }
     }
 }

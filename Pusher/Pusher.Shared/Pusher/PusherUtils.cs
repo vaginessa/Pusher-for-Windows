@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Pusher.Pusher
@@ -15,7 +17,7 @@ namespace Pusher.Pusher
         public static bool IsUserLoggedIn()
         {
             if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(LOGIN_KEY))
-                return (bool) Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY];
+                return (bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY];
 
             return false;
         }
@@ -28,9 +30,29 @@ namespace Pusher.Pusher
 
         public static void StoreAccessToken(string redirect)
         {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] = 
-                redirect.Substring(redirect.IndexOf(':') + 1);
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] =
+                redirect.Substring(redirect.IndexOf('=') + 1);
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
+        }
+
+        public async static void pushNote(string message, string title = "", string device = "")
+        {
+            var values = new Dictionary<string, string>
+            {
+               { "type", "note" },
+               { "title", title },
+               { "body", message },
+               { "device_iden", device}
+            };
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.PostAsync(
+                "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(responseString);
         }
     }
 }
