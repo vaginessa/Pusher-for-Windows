@@ -63,7 +63,7 @@
                             <RowDefinition Height="Auto" MinHeight="58" />
                         </Grid.RowDefinitions>
 
-                        <Image Source="Assets/MediumGray.png" Margin="80, 0, 80, 0" Grid.Row="0" VerticalAlignment="Top" Height="173"/>
+                        <Image Source="Assets/MediumGray.png" Margin="100, 0, 100, 0" Grid.Row="0" VerticalAlignment="Top"/>
 
                         <TextBlock FontSize="25" Margin="0,20,0,0" HorizontalAlignment="Center" TextAlignment="Center" Text="Simple Note Push" Grid.Row="1"/>
 

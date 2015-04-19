@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
+using Windows.Data.Xml.Dom;
+using Windows.UI.Notifications;
 
 namespace Pusher.Pusher
 {
@@ -11,7 +15,7 @@ namespace Pusher.Pusher
         public static readonly string CLIENT_ID = "IfgaX7cNfg0bdIcXgoLmROL6xFlT9dgq";
         public static readonly string CLIENT_SECRET = "w6QmD8gtBtz9gcT6RcjJ9JtIwgP5KVRx";
         public static readonly string REDIRECT_URI = "http://andreapivetta.altervista.org";
-        public static readonly string LOGIN_KEY = "isloggedin";
+        public static readonly string LOGIN_KEY = "isuserloggedin";
         public static readonly string ACCESS_TOKEN_KEY = "token";
 
         public static bool IsUserLoggedIn()
@@ -35,7 +39,7 @@ namespace Pusher.Pusher
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
         }
 
-        public async static void pushNote(string message, string title = "", string device = "")
+        public async static void PushNoteAsync(string message, string title = "", string device = "")
         {
             var values = new Dictionary<string, string>
             {
@@ -53,6 +57,24 @@ namespace Pusher.Pusher
             var responseString = await response.Content.ReadAsStringAsync();
 
             System.Diagnostics.Debug.WriteLine(responseString);
+        }
+
+        public async static Task<Dictionary<string, string>> GetUserInfoAsync()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.GetAsync("https://api.pushbullet.com/v2/users/me");
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(responseString);
+
+            /*foreach(Dictionary<string, string> dic in JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(responseString))
+            {
+                System.Diagnostics.Debug.WriteLine(dic);
+            }*/
+
+            return null;
         }
     }
 }
