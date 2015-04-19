@@ -67,14 +67,12 @@ namespace Pusher.Pusher
             var response = await client.GetAsync("https://api.pushbullet.com/v2/users/me");
             var responseString = await response.Content.ReadAsStringAsync();
 
-            System.Diagnostics.Debug.WriteLine(responseString);
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+            Dictionary<string, string> mDict = new Dictionary<string, string>();
+            mDict.Add("name", (string) json.name);
+            mDict.Add("picUrl", (string) json.image_url);
 
-            /*foreach(Dictionary<string, string> dic in JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(responseString))
-            {
-                System.Diagnostics.Debug.WriteLine(dic);
-            }*/
-
-            return null;
+            return mDict;
         }
     }
 }
