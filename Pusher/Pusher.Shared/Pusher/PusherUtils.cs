@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
 
 namespace Pusher.Pusher
 {
@@ -17,6 +14,8 @@ namespace Pusher.Pusher
         public static readonly string REDIRECT_URI = "http://andreapivetta.altervista.org";
         public static readonly string LOGIN_KEY = "isuserloggedin";
         public static readonly string ACCESS_TOKEN_KEY = "token";
+        public static readonly string USER_NAME_KEY = "name";
+        public static readonly string USER_PIC_URL_KEY = "picurl";
 
         public static bool IsUserLoggedIn()
         {
@@ -69,8 +68,11 @@ namespace Pusher.Pusher
 
             dynamic json = JsonConvert.DeserializeObject(responseString);
             Dictionary<string, string> mDict = new Dictionary<string, string>();
-            mDict.Add("name", (string) json.name);
-            mDict.Add("picUrl", (string) json.image_url);
+            mDict.Add(USER_NAME_KEY, (string)json.name);
+            mDict.Add(USER_PIC_URL_KEY, (string)json.image_url);
+
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
 
             return mDict;
         }
