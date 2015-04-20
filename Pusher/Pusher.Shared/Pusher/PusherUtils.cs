@@ -76,5 +76,21 @@ namespace Pusher.Pusher
 
             return mDict;
         }
+
+        public async static Task<List<string[]>> GetDeviceList()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.GetAsync("https://api.pushbullet.com/v2/devices");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+
+            List<string[]> devicesList = new List<string[]>();
+            foreach (dynamic device in json["devices"])
+                devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
+
+            return devicesList;
+        }
     }
 }
