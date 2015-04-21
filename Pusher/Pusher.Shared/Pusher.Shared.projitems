@@ -15,6 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)DataModel\Push.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataModel\PushLink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataModel\PushNote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\PusherUtils.cs" />
     <Content Include="$(MSBuildThisFileDirectory)DataModel\SampleData.json" />

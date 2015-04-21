@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Pusher.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
 
 namespace Pusher.Pusher
 {
@@ -17,6 +15,8 @@ namespace Pusher.Pusher
         public static readonly string REDIRECT_URI = "http://andreapivetta.altervista.org";
         public static readonly string LOGIN_KEY = "isuserloggedin";
         public static readonly string ACCESS_TOKEN_KEY = "token";
+        public static readonly string USER_NAME_KEY = "name";
+        public static readonly string USER_PIC_URL_KEY = "picurl";
 
         public static bool IsUserLoggedIn()
         {
@@ -67,14 +67,65 @@ namespace Pusher.Pusher
             var response = await client.GetAsync("https://api.pushbullet.com/v2/users/me");
             var responseString = await response.Content.ReadAsStringAsync();
 
-            System.Diagnostics.Debug.WriteLine(responseString);
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+            Dictionary<string, string> mDict = new Dictionary<string, string>();
+            mDict.Add(USER_NAME_KEY, (string)json.name);
+            mDict.Add(USER_PIC_URL_KEY, (string)json.image_url);
 
-            /*foreach(Dictionary<string, string> dic in JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(responseString))
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
+
+            return mDict;
+        }
+
+        public async static Task<List<string[]>> GetDeviceListAsync()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.GetAsync("https://api.pushbullet.com/v2/devices");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+
+            List<string[]> devicesList = new List<string[]>();
+            foreach (dynamic device in json["devices"])
+                devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
+
+            return devicesList;
+        }
+
+        public async static void GetNotesListAsync()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.GetAsync("https://api.pushbullet.com/v2/pushes");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+
+            List<Push> pushes = new List<Push>();
+            foreach (dynamic push in json["pushes"])
             {
-                System.Diagnostics.Debug.WriteLine(dic);
-            }*/
+                if ((bool)push.active)
+                {
+                    switch ((string)push.type)
+                    {
+                        case "note":
+                            pushes.Add(new PushNote(
+                                (string)push.iden, Push.TYPES.NOTE, (string)push.title, (long)push.created, (long)push.modified, (string)push.body));
+                            break;
+                        case "link":
+                            pushes.Add(new PushLink(
+                                (string)push.iden, Push.TYPES.LINK, (string)push.title, (long)push.created, (long)push.modified, (string)push.url));
+                            break;
+                        case "file":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
 
-            return null;
         }
     }
 }
