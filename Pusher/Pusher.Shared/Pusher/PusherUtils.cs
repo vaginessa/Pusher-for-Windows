@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Pusher.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -77,7 +78,7 @@ namespace Pusher.Pusher
             return mDict;
         }
 
-        public async static Task<List<string[]>> GetDeviceList()
+        public async static Task<List<string[]>> GetDeviceListAsync()
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -91,6 +92,40 @@ namespace Pusher.Pusher
                 devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
 
             return devicesList;
+        }
+
+        public async static void GetNotesListAsync()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+            var response = await client.GetAsync("https://api.pushbullet.com/v2/pushes");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic json = JsonConvert.DeserializeObject(responseString);
+
+            List<Push> pushes = new List<Push>();
+            foreach (dynamic push in json["pushes"])
+            {
+                if ((bool)push.active)
+                {
+                    switch ((string)push.type)
+                    {
+                        case "note":
+                            pushes.Add(new PushNote(
+                                (string)push.iden, Push.TYPES.NOTE, (string)push.title, (long)push.created, (long)push.modified, (string)push.body));
+                            break;
+                        case "link":
+                            pushes.Add(new PushLink(
+                                (string)push.iden, Push.TYPES.LINK, (string)push.title, (long)push.created, (long)push.modified, (string)push.url));
+                            break;
+                        case "file":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
         }
     }
 }

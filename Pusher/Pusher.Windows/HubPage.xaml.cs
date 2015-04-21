@@ -178,6 +178,8 @@ namespace Pusher
                 System.Diagnostics.Debug.WriteLine("I'm in");
                 SetupAsync();
             }
+
+            PusherUtils.GetNotesListAsync();
         }
     }
 }
